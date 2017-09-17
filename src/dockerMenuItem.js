@@ -36,7 +36,7 @@ const DockerMenuItem = new Lang.Class({
         this.containerName = containerName;
         this.defaultTerminal = Util.getDefaultTerminal();
 
-      	this.containerName = containerName;
+        this.containerName = containerName;
         this.dockerCommand = dockerCommand;
 
         this.connect('activate', Lang.bind(this, this._dockerAction));

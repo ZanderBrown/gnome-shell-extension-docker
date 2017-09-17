@@ -61,8 +61,8 @@ const DockerMenu = new Lang.Class({
 
     // Show docker menu icon only if installed and append docker containers
     _renderMenu: function() {
-        if(this._isDockerInstalled()) {
-          if(this._isDockerRunning()) {
+        if (Docker.isDockerInstalled()) {
+          if (Docker.isDockerRunning()) {
               this._feedMenu();
           } else {
               let errMsg = _("Docker daemon not started");
