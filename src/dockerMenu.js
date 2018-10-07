@@ -39,7 +39,7 @@ const DockerMenu = new Lang.Class({
         this.parent(0.0, _("Docker containers"));
 
         const hbox = new St.BoxLayout({ style_class: 'panel-status-menu-box' });
-        const gicon = Gio.icon_new_for_string(Me.path + "/docker.svg");
+        const gicon = Gio.icon_new_for_string(Me.path + "/docker-symbolic.svg");
         const dockerIcon = new St.Icon({ gicon: gicon, icon_size: '24' });
 
         hbox.add_child(dockerIcon);
