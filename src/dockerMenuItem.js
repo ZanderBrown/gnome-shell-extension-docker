@@ -34,21 +34,53 @@ const DockerMenuItem = new Lang.Class({
         this.parent(Docker.dockerCommandsToLabels[dockerCommand]);
 
         this.containerName = containerName;
+        this.defaultTerminal = Util.getDefaultTerminal();
+
+      	this.containerName = containerName;
         this.dockerCommand = dockerCommand;
 
         this.connect('activate', Lang.bind(this, this._dockerAction));
     },
 
-    _dockerAction: function () {
-        Docker.runCommand(this.dockerCommand, this.containerName, (status, command, err) => {
-            if (status === 0) {
-                log("`" + command + "` terminated successfully");
-            } else {
-                let errMsg = _("Error occurred when running `" + command + "`");
-                Main.notify(errMsg);
-                log(errMsg);
-                log(err);
-            }
-        });
+    _getCommand: function() {
+        let cmd = '';
+
+        // Form docker exec command or the regular one
+        if( this.dockerCommand === 'exec' ) {
+            // This line assumes /bin/bash exists on the contianer
+            cmd += this.defaultTerminal + ' -- docker exec -it ' + this.containerName + ' /bin/bash';
+        } else {
+            cmd += 'docker ' + this.dockerCommand + ' ' + this.containerName;
+        }
+
+        log(cmd)
+        return cmd;
+    },
+
+    _callbackDockerAction : function(funRes) {
+        if(funRes['status'] == 0) {
+            let msg = "`" + funRes['cmd'] + "` " + _("terminated successfully");
+            log(msg);
+        } else {
+            let errMsg = _("Error occurred when running") + " `" + funRes['cmd'] + "`";
+            Main.notify(errMsg);
+            log(errMsg);
+            log(funRes['err']);
+      }
+    },
+
+    _dockerAction : function() {
+        let dockerCmd = this._getCommand();
+        let res, out, err, status;
+        Util.async(function() {
+            [res, out, err, status] = GLib.spawn_command_line_sync(dockerCmd);
+            return {
+              cmd: dockerCmd,
+              res: res,
+              out: out,
+              err: err,
+              status: status
+            };
+        }, this._callbackDockerAction);
     }
 });
