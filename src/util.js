@@ -39,21 +39,3 @@ function async(fn, callback) {
     });
 }
 
-/**
- * Get's the system's default terminal according to Gnome Shell DConf value
- *
- * @returns {string}
- */
-function getDefaultTerminal() {
-    let terminal = '';
-    let res, out, err, status;
-    let gsettingsCmd = 'gsettings get org.gnome.desktop.default-applications.terminal exec';
-    [res, out, err, status] = GLib.spawn_command_line_sync(gsettingsCmd);
-
-    if( status === 0 ) {
-        let outStr = String.fromCharCode.apply(String, out);
-        terminal = outStr.split('\n')[0].replace(/'/g, "");
-    }
-
-    return terminal;
-}

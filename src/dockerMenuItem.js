@@ -26,6 +26,7 @@ const Me = ExtensionUtils.getCurrentExtension();
 const Docker = Me.imports.src.docker;
 const Util = Me.imports.src.util;
 const GLib = imports.gi.GLib;
+const Gio = imports.gi.Gio;
 
 // Docker actions for each container
 var DockerMenuItem = new Lang.Class({
@@ -36,27 +37,9 @@ var DockerMenuItem = new Lang.Class({
         this.parent(Docker.dockerCommandsToLabels[dockerCommand]);
 
         this.containerName = containerName;
-        this.defaultTerminal = Util.getDefaultTerminal();
-
-        this.containerName = containerName;
         this.dockerCommand = dockerCommand;
 
         this.connect('activate', Lang.bind(this, this._dockerAction));
-    },
-
-    _getCommand: function() {
-        let cmd = '';
-
-        // Form docker exec command or the regular one
-        if( this.dockerCommand === 'exec' ) {
-            // This line assumes /bin/bash exists on the contianer
-            cmd += this.defaultTerminal + ' -- docker exec -it ' + this.containerName + ' /bin/bash';
-        } else {
-            cmd += 'docker ' + this.dockerCommand + ' ' + this.containerName;
-        }
-
-        log(cmd)
-        return cmd;
     },
 
     _callbackDockerAction : function(funRes) {
@@ -72,7 +55,22 @@ var DockerMenuItem = new Lang.Class({
     },
 
     _dockerAction : function() {
-        let dockerCmd = this._getCommand();
+        if (this.dockerCommand === 'exec') {
+            // This line assumes /bin/bash exists on the contianer
+            let command = 'docker exec -it ' + this.containerName + ' /bin/bash';
+            try {
+                var app = Gio.AppInfo.create_from_commandline(command,
+                                                              this.containerName,
+                                                              Gio.AppInfoCreateFlags.NEEDS_TERMINAL);
+                app.launch([], global.create_app_launch_context(0, -1));
+            } catch (err) {
+                Main.notify('Failed to open terminal for ' + this.containerName);
+                log(err);
+            }
+            return;
+        }
+        let dockerCmd = 'docker ' + this.dockerCommand + ' ' + this.containerName;
+        log("Executing: " + cmd)
         let res, out, err, status;
         Util.async(function() {
             [res, out, err, status] = GLib.spawn_command_line_sync(dockerCmd);
