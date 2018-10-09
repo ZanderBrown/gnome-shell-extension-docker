@@ -24,9 +24,11 @@ const Main = imports.ui.main;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 const Docker = Me.imports.src.docker;
+const Util = Me.imports.src.util;
+const GLib = imports.gi.GLib;
 
 // Docker actions for each container
-const DockerMenuItem = new Lang.Class({
+var DockerMenuItem = new Lang.Class({
     Name: 'DockerMenu.DockerMenuItem',
     Extends: PopupMenu.PopupMenuItem,
 

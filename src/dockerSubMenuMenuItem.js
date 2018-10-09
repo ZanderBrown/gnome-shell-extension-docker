@@ -24,6 +24,7 @@ const PopupMenu = imports.ui.popupMenu;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 const DockerMenuItem = Me.imports.src.dockerMenuItem;
+const Util = Me.imports.src.util;
 
 /**
  * Create a St.Icon
@@ -50,7 +51,7 @@ const getStatus = (statusMessage) => {
 }
 
 // Menu entry representing a docker container
-const DockerSubMenuMenuItem = new Lang.Class({
+var DockerSubMenuMenuItem = new Lang.Class({
     Name: 'DockerMenu.DockerSubMenuMenuItem',
     Extends: PopupMenu.PopupSubMenuMenuItem,
 

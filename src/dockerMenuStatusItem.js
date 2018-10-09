@@ -25,7 +25,7 @@ const Me = ExtensionUtils.getCurrentExtension();
 const Util = Me.imports.src.util;
 
 // Docker Service actions (start/stop)
-const DockerMenuStatusItem = new Lang.Class({
+var DockerMenuStatusItem = new Lang.Class({
     Name: 'DockerMenu.DockerMenuStatusItem',
     Extends: PopupMenu.PopupSwitchMenuItem,
 

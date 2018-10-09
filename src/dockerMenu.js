@@ -28,9 +28,10 @@ const Me = ExtensionUtils.getCurrentExtension();
 const Docker = Me.imports.src.docker;
 const DockerSubMenuMenuItem = Me.imports.src.dockerSubMenuMenuItem;
 const DockerMenuStatusItem = Me.imports.src.dockerMenuStatusItem;
+const Util = Me.imports.src.util;
 
 // Docker icon on status menu
-const DockerMenu = new Lang.Class({
+var DockerMenu = new Lang.Class({
     Name: 'DockerMenu.DockerMenu',
     Extends: PanelMenu.Button,
 
@@ -88,6 +89,8 @@ const DockerMenu = new Lang.Class({
             const containers = Docker.getContainers();
             if (containers.length > 0) {
                 containers.forEach((container) => {
+                    log(container.name);
+                    log(container.status);
                     const subMenu = new DockerSubMenuMenuItem.DockerSubMenuMenuItem(container.name, container.status);
                     this.menu.addMenuItem(subMenu);
                 });

@@ -36,7 +36,7 @@ function async(fn, callback) {
     GLib.timeout_add(GLib.PRIORITY_DEFAULT, 0, function () {
         let funRes = fn();
         callback(funRes);
-    }, null);
+    });
 }
 
 /**
