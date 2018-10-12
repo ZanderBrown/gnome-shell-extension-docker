@@ -69,18 +69,13 @@ var DockerMenu = new Lang.Class({
     // Show docker menu icon only if installed and append docker containers
     _renderMenu: function() {
         if (Docker.isDockerInstalled()) {
+          // Add Turn On / Turn Off Switch always
+          let statusSwitch = new DockerMenuStatusItem.DockerMenuStatusItem('Docker');
+          this.menu.addMenuItem(statusSwitch);
+
           if (Docker.isDockerRunning()) {
               this._feedMenu();
-          } else {
-              let errMsg = _("Docker daemon not started");
-              this.menu.addMenuItem(new PopupMenu.PopupMenuItem(errMsg));
-              log(errMsg);
           }
-
-          // Add Turn On / Turn Off Switch always
-          let statusSwitch = new DockerMenuStatusItem.DockerMenuStatusItem('Docker status');
-          this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
-          this.menu.addMenuItem(statusSwitch);
         } else {
           let errMsg = _("Docker binary not found in PATH");
           this.menu.addMenuItem(new PopupMenu.PopupMenuItem(errMsg));
@@ -94,16 +89,16 @@ var DockerMenu = new Lang.Class({
         try {
             const containers = Docker.getContainers();
             if (containers.length > 0) {
+                this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
                 containers.forEach((container) => {
                     log(container.name);
                     log(container.status);
                     const subMenu = new DockerSubMenuMenuItem.DockerSubMenuMenuItem(container.name, container.status);
                     this.menu.addMenuItem(subMenu);
                 });
-            } else {
-                this.menu.addMenuItem(new PopupMenu.PopupMenuItem("No containers detected"));
             }
         } catch (err) {
+            this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
             const errMsg = "Error occurred when fetching containers";
             this.menu.addMenuItem(new PopupMenu.PopupMenuItem(errMsg));
             log(errMsg);
