@@ -25,22 +25,23 @@ const Me = ExtensionUtils.getCurrentExtension();
 const Docker = Me.imports.src.docker;
 
 // Docker container status (start/stop)
-var DockerMenuActiveItem = new Lang.Class({
-    Name: 'DockerMenu.DockerMenuActiveItem',
+var DockerMenuToggleItem = new Lang.Class({
+    Name: 'DockerMenu.DockerMenuToggleItem',
     Extends: PopupMenu.PopupSwitchMenuItem,
 
-    _init: function (container, active) {
+    _init: function (lbl, container, cmds, active) {
         // Set Switch state
-        this.parent('Active', active);
+        this.parent(lbl, active);
         this._active = active;
-        this.container = container;
+        this._container = container;
+        this._cmds = cmds;
 
         this.connect('activate', Lang.bind(this, this._toggle));
     },
 
     _toggle: function () {
-        let act = this._active ? 'stop' : 'start';
-        let dockerCmd = 'docker ' + act+ ' ' + this.container;
+        let act = this._active ? this._cmds[1] : this._cmds[0];
+        let dockerCmd = 'docker ' + act+ ' ' + this._container;
         log("Executing: " + dockerCmd)
         let res, out, err, status;
         Docker.async(function () {
