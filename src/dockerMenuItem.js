@@ -26,6 +26,7 @@ const Me = ExtensionUtils.getCurrentExtension();
 const Docker = Me.imports.src.docker;
 const GLib = imports.gi.GLib;
 const Gio = imports.gi.Gio;
+const DockerRemoveDialog = Me.imports.src.dockerRemoveDialog;
 
 // Docker actions for each container
 var DockerMenuItem = new Lang.Class({
@@ -66,6 +67,10 @@ var DockerMenuItem = new Lang.Class({
                 Main.notify('Failed to open terminal for ' + this.containerName);
                 log(err);
             }
+            return;
+        } else if (this.dockerCommand == 'rm') {
+            let dialog = new DockerRemoveDialog.DockerRemoveDialog(this.containerName);
+            dialog.open(global.get_current_time());
             return;
         }
         let dockerCmd = 'docker ' + this.dockerCommand + ' ' + this.containerName;
