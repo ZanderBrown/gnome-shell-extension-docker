@@ -24,7 +24,6 @@ const Main = imports.ui.main;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 const Docker = Me.imports.src.docker;
-const Util = Me.imports.src.util;
 const GLib = imports.gi.GLib;
 const Gio = imports.gi.Gio;
 
@@ -70,9 +69,9 @@ var DockerMenuItem = new Lang.Class({
             return;
         }
         let dockerCmd = 'docker ' + this.dockerCommand + ' ' + this.containerName;
-        log("Executing: " + cmd)
+        log("Executing: " + dockerCmd)
         let res, out, err, status;
-        Util.async(function () {
+        Docker.async(function () {
             [res, out, err, status] = GLib.spawn_command_line_sync(dockerCmd);
             return {
                 cmd: dockerCmd,

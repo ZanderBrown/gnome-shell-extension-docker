@@ -22,7 +22,7 @@ const GLib = imports.gi.GLib;
 const PopupMenu = imports.ui.popupMenu;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
-const Util = Me.imports.src.util;
+const Docker = Me.imports.src.docker;
 
 // Docker Service actions (start/stop)
 var DockerMenuStatusItem = new Lang.Class({
@@ -62,10 +62,10 @@ var DockerMenuStatusItem = new Lang.Class({
     _dockerAction: function () {
         // TODO: Detect if systemctl and pkexec are installed
         let serviceAction = this.dockerStatus ? 'stop' : 'start';
-        let dockerCmd = 'sh -c "pkexec --user root systemctl ' + serviceAction + ' docker.service --system; exit;"';
+        let dockerCmd = 'sh -c "systemctl ' + serviceAction + ' docker.service --system; exit;"';
         let res, out, err, status;
         log("Let's " + serviceAction + " Docker...");
-        Util.async(function () {
+        Docker.async(function () {
             [res, out, err, status] = GLib.spawn_command_line_async(dockerCmd);
             return {
                 cmd: dockerCmd,
