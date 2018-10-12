@@ -21,6 +21,7 @@
 const St = imports.gi.St;
 const Gio = imports.gi.Gio;
 const Lang = imports.lang;
+const Panel = imports.ui.panel;
 const PanelMenu = imports.ui.panelMenu;
 const PopupMenu = imports.ui.popupMenu;
 const ExtensionUtils = imports.misc.extensionUtils;
@@ -41,7 +42,12 @@ var DockerMenu = new Lang.Class({
 
         const hbox = new St.BoxLayout({ style_class: 'panel-status-menu-box' });
         const gicon = Gio.icon_new_for_string(Me.path + "/docker-symbolic.svg");
-        const dockerIcon = new St.Icon({ gicon: gicon, icon_size: '24' });
+        const dockerIcon = new St.Icon({
+            gicon: gicon,
+            // Docker logo looks a little small at the right size
+            icon_size: Math.round(Panel.PANEL_ICON_SIZE * 1.2),
+            style_class: 'system-status-icon'
+        });
 
         hbox.add_child(dockerIcon);
         hbox.add_child(PopupMenu.arrowIcon(St.Side.BOTTOM));
