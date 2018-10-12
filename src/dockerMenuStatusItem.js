@@ -29,7 +29,7 @@ var DockerMenuStatusItem = new Lang.Class({
     Name: 'DockerMenu.DockerMenuStatusItem',
     Extends: PopupMenu.PopupSwitchMenuItem,
 
-    _init : function(itemLabel) {
+    _init: function (itemLabel) {
         // Get current Docker status
         this.dockerStatus = this._getDockerStatus();
         log('Docker status: ' + this.dockerStatus);
@@ -40,15 +40,15 @@ var DockerMenuStatusItem = new Lang.Class({
         this.connect('activate', Lang.bind(this, this._dockerAction));
     },
 
-    _getDockerStatus: function() {
-    	let statusCmd = 'sh -c "systemctl is-active docker.service --system; exit;"';
-    	let res, out, err, status;
-    	[res, out, err, status] = GLib.spawn_command_line_sync(statusCmd);
-    	return (status === 0);
-	},
+    _getDockerStatus: function () {
+        let statusCmd = 'sh -c "systemctl is-active docker.service --system; exit;"';
+        let res, out, err, status;
+        [res, out, err, status] = GLib.spawn_command_line_sync(statusCmd);
+        return (status === 0);
+    },
 
-	_callbackDockerAction : function(funRes) {
-        if(funRes['status'] === 0) {
+    _callbackDockerAction: function (funRes) {
+        if (funRes['status'] === 0) {
             let msg = "`" + funRes['cmd'] + "` terminated successfully";
             log(msg);
         } else {
@@ -56,23 +56,23 @@ var DockerMenuStatusItem = new Lang.Class({
             Main.notify(errMsg);
             log(errMsg);
             log(funRes['err']);
-    	}
+        }
     },
 
-    _dockerAction : function() {
-    	// TODO: Detect if systemctl and pkexec are installed
-    	let serviceAction = this.dockerStatus ? 'stop' : 'start';
+    _dockerAction: function () {
+        // TODO: Detect if systemctl and pkexec are installed
+        let serviceAction = this.dockerStatus ? 'stop' : 'start';
         let dockerCmd = 'sh -c "pkexec --user root systemctl ' + serviceAction + ' docker.service --system; exit;"';
         let res, out, err, status;
         log("Let's " + serviceAction + " Docker...");
-        Util.async(function() {
+        Util.async(function () {
             [res, out, err, status] = GLib.spawn_command_line_async(dockerCmd);
             return {
-              cmd: dockerCmd,
-              res: res,
-              out: out,
-              err: err,
-              status: status
+                cmd: dockerCmd,
+                res: res,
+                out: out,
+                err: err,
+                status: status
             };
         }, this._callbackDockerAction);
     }

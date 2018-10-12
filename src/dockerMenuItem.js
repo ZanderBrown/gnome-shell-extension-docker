@@ -42,8 +42,8 @@ var DockerMenuItem = new Lang.Class({
         this.connect('activate', Lang.bind(this, this._dockerAction));
     },
 
-    _callbackDockerAction : function(funRes) {
-        if(funRes['status'] == 0) {
+    _callbackDockerAction: function (funRes) {
+        if (funRes['status'] == 0) {
             let msg = "`" + funRes['cmd'] + "` " + _("terminated successfully");
             log(msg);
         } else {
@@ -51,17 +51,17 @@ var DockerMenuItem = new Lang.Class({
             Main.notify(errMsg);
             log(errMsg);
             log(funRes['err']);
-      }
+        }
     },
 
-    _dockerAction : function() {
+    _dockerAction: function () {
         if (this.dockerCommand === 'exec') {
             // This line assumes /bin/bash exists on the contianer
             let command = 'docker exec -it ' + this.containerName + ' /bin/bash';
             try {
                 var app = Gio.AppInfo.create_from_commandline(command,
-                                                              this.containerName,
-                                                              Gio.AppInfoCreateFlags.NEEDS_TERMINAL);
+                    this.containerName,
+                    Gio.AppInfoCreateFlags.NEEDS_TERMINAL);
                 app.launch([], global.create_app_launch_context(0, -1));
             } catch (err) {
                 Main.notify('Failed to open terminal for ' + this.containerName);
@@ -72,14 +72,14 @@ var DockerMenuItem = new Lang.Class({
         let dockerCmd = 'docker ' + this.dockerCommand + ' ' + this.containerName;
         log("Executing: " + cmd)
         let res, out, err, status;
-        Util.async(function() {
+        Util.async(function () {
             [res, out, err, status] = GLib.spawn_command_line_sync(dockerCmd);
             return {
-              cmd: dockerCmd,
-              res: res,
-              out: out,
-              err: err,
-              status: status
+                cmd: dockerCmd,
+                res: res,
+                out: out,
+                err: err,
+                status: status
             };
         }, this._callbackDockerAction);
     }

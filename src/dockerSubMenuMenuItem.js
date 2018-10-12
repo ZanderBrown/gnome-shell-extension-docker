@@ -57,20 +57,19 @@ var DockerSubMenuMenuItem = new Lang.Class({
 
     _init: function (containerName, containerStatusMessage) {
         this.parent(containerName);
-        let statusIcon = new St.Icon({icon_name: 'action-unavailable-symbolic', style_class: 'status-undefined', icon_size: '14'});
+        let statusIcon = new St.Icon({ icon_name: 'action-unavailable-symbolic', style_class: 'status-undefined', icon_size: '14' });
         let status = 'stopped';
-        if(containerStatusMessage.indexOf("Up") > -1) status = 'running';
-        if(containerStatusMessage.indexOf("Paused") > -1) status = 'paused';
+        if (containerStatusMessage.indexOf("Up") > -1) status = 'running';
+        if (containerStatusMessage.indexOf("Paused") > -1) status = 'paused';
 
-        switch(status)
-        {
+        switch (status) {
             case "stopped":
                 this.actor.insert_child_at_index(createIcon('process-stop-symbolic', 'status-stopped'), 1);
                 this.menu.addMenuItem(new DockerMenuItem.DockerMenuItem(containerName, "start"));
                 this.menu.addMenuItem(new DockerMenuItem.DockerMenuItem(containerName, "rm"));
                 break;
             case "running":
-                statusIcon = new St.Icon({icon_name: 'system-run-symbolic', style_class: 'status-running', icon_size: '14'});
+                statusIcon = new St.Icon({ icon_name: 'system-run-symbolic', style_class: 'status-running', icon_size: '14' });
                 // Add option to open a bash terminal inside the container
                 this.menu.addMenuItem(new DockerMenuItem.DockerMenuItem(containerName, "exec"));
                 this.menu.addMenuItem(new DockerMenuItem.DockerMenuItem(containerName, "pause"));

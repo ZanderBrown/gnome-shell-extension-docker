@@ -67,19 +67,19 @@ var DockerMenu = new Lang.Class({
     },
 
     // Show docker menu icon only if installed and append docker containers
-    _renderMenu: function() {
+    _renderMenu: function () {
         if (Docker.isDockerInstalled()) {
-          // Add Turn On / Turn Off Switch always
-          let statusSwitch = new DockerMenuStatusItem.DockerMenuStatusItem('Docker');
-          this.menu.addMenuItem(statusSwitch);
+            // Add Turn On / Turn Off Switch always
+            let statusSwitch = new DockerMenuStatusItem.DockerMenuStatusItem('Docker');
+            this.menu.addMenuItem(statusSwitch);
 
-          if (Docker.isDockerRunning()) {
-              this._feedMenu();
-          }
+            if (Docker.isDockerRunning()) {
+                this._feedMenu();
+            }
         } else {
-          let errMsg = _("Docker binary not found in PATH");
-          this.menu.addMenuItem(new PopupMenu.PopupMenuItem(errMsg));
-          log(errMsg);
+            let errMsg = _("Docker binary not found in PATH");
+            this.menu.addMenuItem(new PopupMenu.PopupMenuItem(errMsg));
+            log(errMsg);
         }
         this.actor.show();
     },
