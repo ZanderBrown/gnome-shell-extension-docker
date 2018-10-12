@@ -83,20 +83,6 @@ var getContainers = () => {
 };
 
 /**
- * Run a docker command
- * @param {String} command The command to run
- * @param {String} containerName The container
- * @param {Function} callback A callback that takes the status, command, and stdErr
- */
-var runCommand = (command, containerName, callback) => {
-    const cmd = "docker " + command + " " + containerName;
-    async(() => {
-        const [res, out, err, status] = GLib.spawn_command_line_sync(cmd);
-        return { cmd: cmd, err: err, status: status };
-    }, (res) => callback(res.status, res.cmd, res.err));
-}
-
-/**
  * Run a function in asynchronous mode using GLib
  * @param {Function} fn The function to run
  * @param {Function} callback The callback to call after fn

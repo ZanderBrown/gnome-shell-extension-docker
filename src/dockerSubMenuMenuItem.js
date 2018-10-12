@@ -24,6 +24,7 @@ const PopupMenu = imports.ui.popupMenu;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 const DockerMenuItem = Me.imports.src.dockerMenuItem;
+const DockerMenuActiveItem = Me.imports.src.dockerMenuActiveItem;
 
 /**
  * Create a St.Icon
@@ -59,19 +60,18 @@ var DockerSubMenuMenuItem = new Lang.Class({
         let status = 'stopped';
         if (containerStatusMessage.indexOf("Up") > -1) status = 'running';
         if (containerStatusMessage.indexOf("Paused") > -1) status = 'paused';
-
         switch (status) {
             case "stopped":
                 this.actor.insert_child_at_index(createIcon('process-stop-symbolic', 'status-stopped'), 1);
-                this.menu.addMenuItem(new DockerMenuItem.DockerMenuItem(containerName, "start"));
+                this.menu.addMenuItem(new DockerMenuActiveItem.DockerMenuActiveItem(containerName, false));
                 this.menu.addMenuItem(new DockerMenuItem.DockerMenuItem(containerName, "rm"));
                 break;
             case "running":
                 this.actor.insert_child_at_index(createIcon('system-run-symbolic', 'status-running'), 1);
                 // Add option to open a bash terminal inside the container
+                this.menu.addMenuItem(new DockerMenuActiveItem.DockerMenuActiveItem(containerName, true));
                 this.menu.addMenuItem(new DockerMenuItem.DockerMenuItem(containerName, "exec"));
                 this.menu.addMenuItem(new DockerMenuItem.DockerMenuItem(containerName, "pause"));
-                this.menu.addMenuItem(new DockerMenuItem.DockerMenuItem(containerName, "stop"));
                 break;
             case "paused":
                 this.actor.insert_child_at_index(createIcon('media-playback-pause-symbolic', 'status-paused'), 1);
